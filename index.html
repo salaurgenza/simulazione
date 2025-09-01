@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <title>Demo Sala Operatoria</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-orbit-controls-component@1.3.0/dist/aframe-orbit-controls-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/wmurphyrd/aframe-super-hands-component@master/dist/aframe-super-hands.min.js"></script>
+</head>
+<body>
+    <a-scene background="color: #ECECEC">
+
+        <!-- Luci -->
+        <a-entity light="type: ambient; intensity: 0.8; color: #fff"></a-entity>
+        <a-entity light="type: directional; intensity: 1.2; castShadow: true" position="3 5 3"></a-entity>
+        <a-entity light="type: point; intensity: 0.6; distance: 20; decay: 2" position="-3 2 2"></a-entity>
+
+        <!-- Modello sala operatoria -->
+        <a-entity id="sala-operatoria"
+                  gltf-model="scene.gltf"
+                  position="0 0 0"
+                  scale="0.3 0.3 0.3"
+                  auto-rotate>
+        </a-entity>
+
+        <!-- Un oggetto interattivo di prova -->
+        <a-box id="strumento1"
+               position="0 1 -2"
+               color="#4CC3D9"
+               depth="0.2" height="0.2" width="0.6"
+               class="interactable"
+               grabbable draggable droppable>
+        </a-box>
+
+        <!-- Camera con controlli orbitali + cursore -->
+        <a-entity id="cameraRig" camera
+                  position="0 2 5"
+                  orbit-controls="target: 0 1 0; enableDamping: true; dampingFactor: 0.125; rotateSpeed:0.5; zoomSpeed:1; minDistance:2; maxDistance:10; enablePan:false;">
+            <a-cursor></a-cursor>
+            <a-entity super-hands></a-entity>
+        </a-entity>
+
+    </a-scene>
+
+    <script>// Rotazione automatica del modello
+        AFRAME.registerComponent('auto-rotate', {
+            schema: { speed: { type: 'number', default: 0.2 } },
+            tick: function (time, timeDelta) {
+                const rotation = this.el.getAttribute('rotation');
+                this.el.setAttribute('rotation', {
+                    x: rotation.x,
+                    y: rotation.y + this.data.speed * (timeDelta / 16),
+                    z: rotation.z
+                });
+            }
+        });</script>
+</body>
+</html>
